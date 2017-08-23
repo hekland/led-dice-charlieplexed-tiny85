@@ -12,11 +12,11 @@ four pins, and one pin for the ball switch to detect throwing (via interrupt).
 The ATtiny85 powers off when done showing the number to save power, avoiding the need 
 for a power switch.
 
-The ATtiny85 is using a 8MHz internal clock.
+The ATtiny85 is using a 1MHz internal clock.
 
 Low-power modes are attained using the LowPower library:
 https://github.com/sej7278/LowPower which is based on the 
-LowPower library from Rocket Scream Electronics(www.rocketscream.com)
+LowPower library from Rocket Scream Electronics (www.rocketscream.com)
 
 ### How do I get set up? ###
 
@@ -30,7 +30,7 @@ LowPower library from Rocket Scream Electronics(www.rocketscream.com)
 **How to program the ATtiny85**
 
 * [Setup your Uno as programmer](http://highlowtech.org/?p=1706)
-* [Burn bootloader on the ATtiny85 using the 8MHz internal clock, and install sketch](http://highlowtech.org/?p=1695)
+* [Burn bootloader on the ATtiny85 using the 1MHz internal clock, and install sketch](http://highlowtech.org/?p=1695)
 
 ### Contribution guidelines ###
 
