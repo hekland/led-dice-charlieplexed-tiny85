@@ -127,7 +127,6 @@ void rollDice()
       {
         setPin(LED_PINS[pinIdx], LED_PIN_STATES[pinStates][pinIdx]);
       }
-      delay( 3 ); // can't use low-power since sleep times are not short enough
     }
     turnOffLEDs();
   } while( (uint16_t)(millis() - start) < timeout_ms );
