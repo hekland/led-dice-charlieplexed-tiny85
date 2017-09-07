@@ -5,6 +5,34 @@
 * four pins, and one pin for the ball switch to detect throwing (via interrupt). 
 * The ATtiny85 powers off when done showing the number to save power, avoiding the need 
 * for a power switch.
+*
+* Circuit diagram for the dice:
+*
+*        +--------+
+* PB1 +-+|  470   |+-----+------++--------+--------+
+*        +--------+      |      |         |        |
+*                       ---   -----       |        |
+*                       \1/    /2\        |        |     +-----+
+*                      -----   ---        |        |     |1   2|
+*        +--------+      |      |         |        |     |     |
+* PB0 +-+|  470   |+-----+------+        ---     -----   |3 7 4|
+*        +--------+      |      |        \5/      /6\    |     |
+*                       ---   -----     -----     ---    |5   6|
+*                       \3/    /4\        |        |     +-----+
+*                      -----   ---        |        |
+*        +--------+      |      |         |        |
+* PB4 +-+|  470   |+-----+------+---------+--------+
+*        +--------+
+*
+*
+*                                            +----+ PB2
+*        +--------+                          |
+* PB3 +-+|  470   |+-----------+            |o
+*        +--------+           ---         ==|
+*                             \7/           |o
+*                            -----           |
+*                              |             |
+* GND +------------------------+-------------+
 * 
 * Low-power modes are attained using the LowPower library:
 * https://github.com/sej7278/LowPower which is based on the 
