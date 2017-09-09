@@ -42,6 +42,7 @@
 * 
 * Written by: Fredrik Hekland
 * Date: 2017-08-22
+* Last update: 2017-09-09
 * 
 * This code is licensed under Creative Commons Attribution-ShareAlike 3.0
 * Unported License.
@@ -51,7 +52,7 @@
 
 #include "LowPower.h"
 
-const uint16_t timeout_ms = 3000; // Show number for 4 seconds
+const uint16_t timeout_ms = 3000; // Show number for this many milliseconds
 
 const int8_t IN = -1;
 volatile bool isDiceThrown = false; // volatile since it's set by the interrupt service routine
@@ -69,7 +70,8 @@ const int8_t LED_PIN_STATES[8][N_LED_PINS] = {{IN,   IN,   IN,   IN},
                                               {LOW,  IN,   HIGH, IN}};  // LED 6
 
 /* Number in a row indicates which entries in LED_PIN_STATES to cycle 
- *  through to form a number of the dice. Zero breaks out of for-loop as remaining pins are already inputs. */
+ * through to form a number of the dice. Zero breaks out of for-loop 
+ * as remaining pins are already inputs. */
 const int8_t DICE_NUMBERS[NUMBERS+1][NUMBERS] = {{0,0,0,0,0,0}, // 0, not used
                                                  {1,0,0,0,0,0}, // 1
                                                  {4,5,0,0,0,0}, // 2
