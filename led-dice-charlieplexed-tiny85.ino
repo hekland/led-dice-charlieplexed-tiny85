@@ -4,30 +4,32 @@
 * This runs on an ATtiny85 by using Charlieplexing to control the seven LEDs with only
 * four pins, and one pin for the ball switch to detect throwing (via interrupt). 
 * The ATtiny85 powers off when done showing the number to save power, avoiding the need 
-* for a power switch.
+* for a power switch. In power-off, the current consumption from the CR2032 is ~160uA.
+* When lighing the LEDs it's approximately 2mA. The ATtiny85 is set to 1MHz internal
+* clock.
 *
 * Circuit diagram for the dice:
 *
 *        +--------+
-* PB1 +-+|  470   |+-----+------++--------+--------+
+* PB1 +-+| 470ohm +-----+------++--------+--------+
 *        +--------+      |      |         |        |
-*                       ---   -----       |        |
-*                       \1/    /2\        |        |     +-----+
-*                      -----   ---        |        |     |1   2|
-*        +--------+      |      |         |        |     |     |
-* PB0 +-+|  470   |+-----+------+        ---     -----   |3 7 4|
-*        +--------+      |      |        \5/      /6\    |     |
-*                       ---   -----     -----     ---    |5   6|
-*                       \3/    /4\        |        |     +-----+
+*                       ---   -----       |        |   LED arrangement:
+*                       \1/    /2\        |        |     +-------+
+*                      -----   ---        |        |     |1     2|
+*        +--------+      |      |         |        |     |       |
+* PB0 +-+| 470ohm |+-----+------+        ---     -----   |3  7  4|
+*        +--------+      |      |        \5/      /6\    |       |
+*                       ---   -----     -----     ---    |5     6|
+*                       \3/    /4\        |        |     +-------+
 *                      -----   ---        |        |
 *        +--------+      |      |         |        |
-* PB4 +-+|  470   |+-----+------+---------+--------+
+* PB4 +-+| 470ohm |+-----+------+---------+--------+
 *        +--------+
 *
 *
 *                                            +----+ PB2
 *        +--------+                          |
-* PB3 +-+|  470   |+-----------+            |o
+* PB3 +-+| 470ohm |+-----------+            |o
 *        +--------+           ---         ==|
 *                             \7/           |o
 *                            -----           |
@@ -49,22 +51,22 @@
 
 #include "LowPower.h"
 
-const uint16_t timeout_ms = 4000; // Show number for 4 seconds
+const uint16_t timeout_ms = 3000; // Show number for 4 seconds
 
 const int8_t IN = -1;
-volatile bool isDiceThrown = false;
+volatile bool isDiceThrown = false; // volatile since it's set by the interrupt service routine
 const int8_t NUMBERS = 6;
 const int8_t N_LED_PINS = 4;
 const int8_t THROW_PIN = 2;
 const int8_t LED_PINS[N_LED_PINS] = {1, 0, 4, 3};
 const int8_t LED_PIN_STATES[8][N_LED_PINS] = {{IN,   IN,   IN,   IN},
-                                              {IN,   IN,   IN,   HIGH},
-                                              {HIGH, LOW,  IN,   IN},
-                                              {LOW,  HIGH, IN,   IN},
-                                              {IN,   HIGH, LOW,  IN},
-                                              {IN,   LOW,  HIGH, IN},
-                                              {HIGH, IN,   LOW,  IN},
-                                              {LOW,  IN,   HIGH, IN}};
+                                              {IN,   IN,   IN,   HIGH}, // LED 7
+                                              {HIGH, LOW,  IN,   IN},   // LED 1
+                                              {LOW,  HIGH, IN,   IN},   // LED 2
+                                              {IN,   HIGH, LOW,  IN},   // LED 3
+                                              {IN,   LOW,  HIGH, IN},   // LED 4
+                                              {HIGH, IN,   LOW,  IN},   // LED 5
+                                              {LOW,  IN,   HIGH, IN}};  // LED 6
 
 /* Number in a row indicates which entries in LED_PIN_STATES to cycle 
  *  through to form a number of the dice. Zero breaks out of for-loop as remaining pins are already inputs. */
@@ -83,10 +85,11 @@ const int8_t DICE_NUMBERS[NUMBERS+1][NUMBERS] = {{0,0,0,0,0,0}, // 0, not used
  */
 void setup()
 {
-  randomSeed(analogRead(0));
+  randomSeed(analogRead(0)); // try to get some randomness for the RNG
   pinMode(THROW_PIN, INPUT_PULLUP);
   turnOffLEDs();
   enableExternalInterrupt();
+  
 #ifdef SERIAL_DEBUG
   Serial.begin(9600);
 #endif
@@ -113,7 +116,7 @@ void loop()
  */
 void enableExternalInterrupt()
 {
-  GIMSK |= _BV(6);
+  GIMSK |= _BV(6); // set bit6 in General Interrupt Mask Register
 }
 
 /**
@@ -121,7 +124,7 @@ void enableExternalInterrupt()
  */
 void disableExternalInterrupt()
 {
-  GIMSK &= ~_BV(6);
+  GIMSK &= ~_BV(6); // clear bit6 in General Interrupt Mask Register
 }
 
 /**
