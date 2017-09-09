@@ -4,7 +4,7 @@
 * This runs on an ATtiny85 by using Charlieplexing to control the seven LEDs with only
 * four pins, and one pin for the ball switch to detect throwing (via interrupt). 
 * The ATtiny85 powers off when done showing the number to save power, avoiding the need 
-* for a power switch. In power-off, the current consumption from the CR2032 is ~160uA.
+* for a power switch. In power-off, the current consumption from the CR2032 is ~160nA.
 * When lighing the LEDs it's approximately 2mA. The ATtiny85 is set to 1MHz internal
 * clock.
 *
