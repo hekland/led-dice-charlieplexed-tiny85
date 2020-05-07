@@ -44,4 +44,4 @@ of this dice. It may be a loaded dice.
 
 ### Who do I talk to? ###
 
-Written by: Fredrik Hekland
+Written by: F.Hekland
