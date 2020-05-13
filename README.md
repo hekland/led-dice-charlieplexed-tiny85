@@ -32,7 +32,7 @@ of this dice. It may be a loaded dice.
 * [ATtiny support for Arduino IDE](https://github.com/damellis/attiny)
 * [Low-power Library for Arduino with ATtiny85-support](https://github.com/sej7278/LowPower)
 * An Arduino Uno for programming the ATtiny85.
-* Some hardware as described in the Fritzing file.
+* Some hardware as described in the ino file.
 
 **How to program the ATtiny85**
 
